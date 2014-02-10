@@ -1,0 +1,12 @@
+articles:
+    title: Статьи
+    fields:
+        - {id: title, title: Заголовок, type: char}
+        - {id: text, title: Текст, type: char}
+        - {id: date_published, title: Дата статьи, type: date}
+
+rooms:
+    title: Комнаты
+    fields:
+        - {id: department, title: Отдел, type: char}
+        - {id: spots, title: Вместимость, type: int}

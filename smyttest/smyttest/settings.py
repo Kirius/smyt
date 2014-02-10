@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
 Django settings for smyttest project.
 
@@ -7,12 +9,15 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+YAML_FILENAME = os.path.join(BASE_DIR, 'dynamic', 'models_description.yaml')
+if 'test' in sys.argv:
+    YAML_FILENAME += '_test'
 
-
+SOUTH_TESTS_MIGRATE = False
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
