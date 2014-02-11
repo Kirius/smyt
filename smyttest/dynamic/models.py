@@ -5,6 +5,8 @@ from django.conf import settings
 
 import yaml
 
+dynamic_models = {}
+
 
 def get_field(field_type, title):
     """
@@ -40,12 +42,14 @@ def define_models():
             {'verbose_name': verbose_name,
              'verbose_name_plural': verbose_name}
         )
-
-        globals()[model_name.capitalize()] = type(
-            model_name.capitalize(),
+        capitalized_name = model_name.capitalize()
+        new_model = type(
+            capitalized_name,
             (models.Model, ),
             attrs
         )
+        globals()[capitalized_name] = new_model
+        dynamic_models[capitalized_name] = new_model
 
 define_models()
 
