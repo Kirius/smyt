@@ -1,15 +1,16 @@
-{% load dynamic %}
-
 <!doctype html>
 <html>
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script src="{{STATIC_URL}}dynamic/js/dynamic.js"></script>
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}dynamic/css/dynamic.css">
 </head>
 <body>
+{% csrf_token %}
 <div class="left">
-    <ul>
+    <ul id="models">
     {% for model in models %}
         <li><a id="{{model.name}}" href="#">{{model.verbose_name}}</a></li>
     {% endfor %}
@@ -20,6 +21,7 @@
         <!-- <tr><td>11</td><td>12</td><td>13</td></tr>
         <tr><td>21</td><td>22</td><td>23</td></tr> -->
     </table>
+    <div id="message"></div>
 </div>
 
 </body>

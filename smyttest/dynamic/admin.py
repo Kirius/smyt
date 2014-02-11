@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from django.contrib import admin
 from dynamic.models import dynamic_models
 

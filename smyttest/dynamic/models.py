@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from django.db import models
 from django.conf import settings
 
@@ -19,6 +18,18 @@ def get_field(field_type, title):
         return models.DateField(verbose_name=title)
     # Default is IntegerField
     return models.IntegerField(verbose_name=title)
+
+
+def get_field_type(field):
+    """
+    Returns field type based on django field.
+    Only CharField, IntegerField and DateField are supported
+    """
+    if isinstance(field, models.CharField):
+        return 'char'
+    if isinstance(field, models.DateField):
+        return 'date'
+    return 'int'
 
 
 def define_models():
