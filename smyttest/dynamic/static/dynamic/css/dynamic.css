@@ -23,3 +23,11 @@
 #message.error {
     color: red;
 }
+#new_record input {
+    display: block;
+    margin-top: 5px;
+}
+#new_record {
+    display: inline-block;
+    margin-top: 10px;
+}

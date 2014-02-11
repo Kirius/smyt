@@ -15,6 +15,12 @@ $(function () {
             // fill in table headers
             for (var name in headers) {
                 $('<th></th>').text(headers[name][0]).appendTo(cur_row);
+                // create inputs for new record
+                $("<input type='text'>")
+                    .prop('field', name)
+                    .prop('type', headers[name][1])
+                    .appendTo('#new_record')
+                    .before("<span>" + headers[name][0] + "</span>")
             }
             $('table.editable').empty().append(cur_row);
             // fill in received data in table rows
@@ -28,6 +34,8 @@ $(function () {
                 }
                 $('table.editable').append(cur_row);
             }
+
+
         })
     }
 
@@ -115,6 +123,7 @@ $(function () {
 
     // load model on click
     $('#models a').click(function() {
+        $('#new_record :not(legend)').remove();
         current_model = $(this).attr('id')
         getData(current_model);
     });
