@@ -42,3 +42,13 @@ def update_data(request):
     setattr(record, field_name, value)
     record.save()
     return {'success': True}
+
+
+@require_POST
+@json_response
+def insert_data(request):
+    data = {key: request.POST[key] for key in request.POST}
+    model_name = data.pop('model')
+    model = dynamic_models[model_name]
+    model.objects.create(**data)
+    return {'success': True}

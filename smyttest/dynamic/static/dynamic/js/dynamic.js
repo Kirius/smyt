@@ -16,20 +16,26 @@ $(function () {
             for (var name in headers) {
                 $('<th></th>').text(headers[name][0]).appendTo(cur_row);
                 // create inputs for new record
-                $("<input type='text'>")
-                    .prop('field', name)
-                    .prop('type', headers[name][1])
+                var new_input = $("<input type='text'>")
+                    .attr('name', name)
+                    .data('type', headers[name][1])
                     .appendTo('#new_record')
                     .before("<span>" + headers[name][0] + "</span>")
+                    .focus(function () {
+                        $(this).removeClass('invalid');
+                    });
+                if (new_input.data('type') === 'date') {
+                    new_input.datepicker({'dateFormat': 'yy-mm-dd'});
+                }
             }
             $('table.editable').empty().append(cur_row);
             // fill in received data in table rows
             for (var i = 0; i < rows.length; i++) {
-                var cur_row = $('<tr></tr>').prop('id', rows[i].id);
+                var cur_row = $('<tr></tr>').data('id', rows[i].id);
                 for (var name in headers) {
                     $('<td></td>').text(rows[i][name])
-                        .prop('type', headers[name][1])
-                        .prop('field', name)
+                        .data('type', headers[name][1])
+                        .data('field', name)
                         .appendTo(cur_row);
                 }
                 $('table.editable').append(cur_row);
@@ -39,23 +45,36 @@ $(function () {
         })
     }
 
-    function updateOnServer(cell) {
+    function showMessage(text, error){
+        var msg = $('#message')
+        if (error) {
+            msg.addClass('error');
+        } else {
+            msg.removeClass('error');
+        }
+        msg.text(text).show().fadeOut(2000);
+    }
+
+    function updateRecord(cell) {
         var data = {
             'model': current_model,
-            'id': cell.parent().prop('id'),
-            'field': cell.prop('field'),
+            'id': cell.parent().data('id'),
+            'field': cell.data('field'),
             'value': cell.text()
         }
-        $.post('/dynamic/api/update', data).success(function () {
-            $('#message').removeClass('error')
-                .text('Record has been successfully updated')
-                .show()
-                .fadeOut(2000)
-        }).error(function () {
-            $('#message').addClass('error')
-                .text('There was an error during update')
-                .show()
-                .fadeOut(2000)
+        $.post('/dynamic/api/update', data).success(function() {
+            showMessage('Record has been successfully updated', false);
+        }).error(function() {
+            showMessage('There was an error during update', true);
+        })
+    }
+
+    function insertRecord(params) {
+        $.post('/dynamic/api/insert', params).success(function(data) {
+            $('#models a#' + current_model).click();
+            showMessage('Record has been successfully inserted', false);
+        }).error(function() {
+            showMessage('There was an error during insert', true);
         })
     }
 
@@ -75,7 +94,7 @@ $(function () {
     // make data editable
     $("table.editable").on('click', 'td', function () {
         var cell = $(this);
-        var type = cell.prop('type');
+        var type = cell.data('type');
         var original_data = cell.text();
         var input = $("<input type='text'>").val(original_data)
             .width(cell.width());
@@ -86,7 +105,7 @@ $(function () {
                 if (validate(input.val(), 'date')) {
                     original_data = input.val();
                     cell.text(input.val());
-                    updateOnServer(cell);
+                    updateRecord(cell);
                 }
             },
             'onClose': function() {
@@ -106,7 +125,7 @@ $(function () {
                 if (validate($.trim(input.val()), type)) {
                     cell.text(input.val());
                     cell.off('click');
-                    updateOnServer(cell);
+                    updateRecord(cell);
                 } else {
                     input.addClass('invalid');
                 }
@@ -123,12 +142,28 @@ $(function () {
 
     // load model on click
     $('#models a').click(function() {
-        $('#new_record :not(legend)').remove();
+        $('#new_record').empty();
         current_model = $(this).attr('id')
         getData(current_model);
     });
     // load first model
     $('#models a:first').click();
+
+    // validate fields and insert new record
+    $('#submit').click(function() {
+        var valid = true;
+        $('#new_record input').each(function() {
+            var elm = $(this);
+            if (!validate(elm.val(), elm.data('type'))) {
+                elm.addClass('invalid');
+                valid = false;
+            }
+        });
+        if (valid) {
+            var params = $('#new_record').serialize() + '&model=' + current_model;
+            insertRecord(params);
+        }
+    })
 
 });
 
