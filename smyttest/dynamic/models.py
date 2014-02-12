@@ -43,7 +43,7 @@ def define_models():
 
     for model_name in tables:
         attrs = {field['id'].lower(): get_field(field['type'], field['title'])
-                    for field in tables[model_name]['fields']}
+                 for field in tables[model_name]['fields']}
 
         attrs['__module__'] = __name__
         verbose_name = tables[model_name]['title']
@@ -63,6 +63,3 @@ def define_models():
         dynamic_models[capitalized_name] = new_model
 
 define_models()
-
-# print rooms._meta.get_field('spots').verbose_name
-# print rooms._meta.verbose_name

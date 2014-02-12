@@ -9,6 +9,10 @@ $(function () {
 
     function getData(model) {
         $.getJSON('/dynamic/api/get', {'model': model}).success(function(data) {
+            if (!data.success) {
+                showMessage('There was an error during getting data', true);
+                return;
+            }
             var headers = data.headers;
             var rows = data.rows;
             var cur_row = $('<tr></tr>');
@@ -62,19 +66,23 @@ $(function () {
             'field': cell.data('field'),
             'value': cell.text()
         }
-        $.post('/dynamic/api/update', data).success(function() {
-            showMessage('Record has been successfully updated', false);
-        }).error(function() {
-            showMessage('There was an error during update', true);
+        $.post('/dynamic/api/update', data).success(function(data) {
+            if (!data.success) {
+                showMessage('There was an error during update', true);
+            } else {
+                showMessage('Record has been successfully updated', false);
+            }
         })
     }
 
     function insertRecord(params) {
         $.post('/dynamic/api/insert', params).success(function(data) {
-            $('#models a#' + current_model).click();
-            showMessage('Record has been successfully inserted', false);
-        }).error(function() {
-            showMessage('There was an error during insert', true);
+            if (!data.success){
+                showMessage('There was an error during insert', true);
+            } else {
+                $('#models a#' + current_model).click();
+                showMessage('Record has been successfully inserted', false);
+            }
         })
     }
 
