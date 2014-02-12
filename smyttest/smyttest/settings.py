@@ -24,9 +24,9 @@ SOUTH_TESTS_MIGRATE = False
 SECRET_KEY = 'mbttn8_en#tt30k@=lgbko8*y2b_cdtj936#eii2e#7oje7*b_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -95,3 +95,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+try:
+    from smyttest.local_config import *
+except:
+    pass
