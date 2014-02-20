@@ -12,10 +12,3 @@ rooms:
     fields:
         - {id: department, title: Отдел, type: char}
         - {id: spots, title: Вместимость, type: int}
-
-
-cars:
-    title: Машины
-    fields:
-        - {id: type, title: Марка, type: char}
-        - {id: weight, title: Вес, type: int}
